@@ -4,22 +4,21 @@ import argparse
 import csv
 
 def convert(line):
-    fields =  ['date', 'descr1', 'account', 'contra_account', '_', 'direction', 'amount', 'type', 'descr2', '_']
-    tr      = dict(zip(fields, [' '.join(x.strip().split()) for x in line]))
-    descr   = '%s - %s: %s' % (tr['descr1'], tr['type'], tr['descr2'])
-    amount  = tr['amount'].replace(',', '.')
-    deposit = amount if tr['direction'] == 'Bij' else ' '
-    withdrw = ' ' if tr['direction'] == 'Bij' else amount
-    account = tr['account']
+    fields   =  ['date', 'descr1', 'account', 'contra_account', '_', 'direction', 'amount1', 'type', 'descr2', '_']
+    tr       = dict(zip(fields, [' '.join(x.strip().split()) for x in line]))
+    descr    = '%s - %s: %s' % (tr['descr1'], tr['type'], tr['descr2'])
+    amount1  = tr['amount1']
+    amount2  = amount1 if tr['direction'] == 'Bij' else '-' + amount1
+    account  = tr['account']
     contra_account = tr.get('contra_account')
-    return '%s; %s; %s; %s; %s; %s ' % (tr['date'], deposit, withdrw, descr, account, contra_account)
+    return '"%s"; "%s"; "%s"; "%s"; "%s" ' % (tr['date'], amount2, descr, account, contra_account)
 
 def main():
-    desc = """Convert ING CSV export to GNUCash importable format"""
+    desc = """Convert ING semicolon delimited CSV export to GNUCash importable format"""
     parser = argparse.ArgumentParser(description=desc)
     parser.add_argument('file', type=argparse.FileType('r'), help='file to convert')
     args = parser.parse_args()
-    print('date;deposit;withdrw;descr;account;contra_account')
+    print('"date";"amount";"withdrw";"descr";"account";"contra_account"')
     for line in list(csv.reader(args.file.readlines(), delimiter=';'))[1:]:
         print(convert(line))
 
