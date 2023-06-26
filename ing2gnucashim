@@ -18,7 +18,7 @@ def main():
     parser = argparse.ArgumentParser(description=desc)
     parser.add_argument('file', type=argparse.FileType('r'), help='file to convert')
     args = parser.parse_args()
-    print('"date";"amount";"withdrw";"descr";"account";"contra_account"')
+    print('"date";"amount";"descr";"account";"contra_account"')
     for line in list(csv.reader(args.file.readlines(), delimiter=';'))[1:]:
         print(convert(line))
 
