@@ -4,22 +4,38 @@ import argparse
 import csv
 
 def convert(line):
+    #Making a list of values drawn from a line in the CSV
     fields   =  ['date', 'descr1', 'account', 'contra_account', '_', 'direction', 'amount1', 'type', 'descr2', '_']
+    #Making a dictionary with key-value pairs
     tr       = dict(zip(fields, [' '.join(x.strip().split()) for x in line]))
+    #Merging various description fiels to one field
     descr    = '%s - %s: %s' % (tr['descr1'], tr['type'], tr['descr2'])
+
+    #Defining the given amount in order to manipulate debit or credit. 
+    #This is important because GNU Cash expects a specific format in order to split an import into correct debit/credit mutations.
+    #If the bankexport shows a 'BIJ' value, the amount is passed through as a positive value
     amount1  = tr['amount1']
+    #If the bankexport shows a 'AF' value, a '-' is added in front of the string to make it a negative value
     amount2  = amount1 if tr['direction'] == 'Bij' else '-' + amount1
+
+    #Pass the accountnumber of the mutation. Important with combined bank-exports ('Alle Rekeningen')
     account  = tr['account']
+    #Pass the contra account in order to easily process internal transation between accounts
     contra_account = tr.get('contra_account')
+    #Return a nicely formatted new line of semicolon delimited values
     return '"%s"; "%s"; "%s"; "%s"; "%s" ' % (tr['date'], amount2, descr, account, contra_account)
 
 def main():
+    #Run the script in a proper way and read a file
     desc = """Convert ING semicolon delimited CSV export to GNUCash importable format"""
     parser = argparse.ArgumentParser(description=desc)
     parser.add_argument('file', type=argparse.FileType('r'), help='file to convert')
     args = parser.parse_args()
+    #Print a header line to the output, which contains the fieldnames. That makes importing easier.
     print('"date";"amount";"descr";"account";"contra_account"')
+    #Run the converting magic per CSV line. The delimiter is set to ';'. Can be changed if needed.
     for line in list(csv.reader(args.file.readlines(), delimiter=';'))[1:]:
+    #Print lines to output (CLI). Redirect output (>) to file at the CLI.
         print(convert(line))
 
 main()
