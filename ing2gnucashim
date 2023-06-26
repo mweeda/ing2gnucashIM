@@ -8,8 +8,8 @@ def convert(line):
     tr      = dict(zip(fields, [' '.join(x.strip().split()) for x in line]))
     descr   = '%s - %s: %s' % (tr['descr1'], tr['type'], tr['descr2'])
     amount  = tr['amount'].replace(',', '.')
-    deposit = amount if tr['direction'] == 'Bij' else ''
-    withdrw = '' if tr['direction'] == 'Bij' else amount
+    deposit = amount if tr['direction'] == 'Bij' else ' '
+    withdrw = ' ' if tr['direction'] == 'Bij' else amount
     account = tr['account']
     contra_account = tr.get('contra_account')
     return '%s; %s; %s; %s; %s; %s ' % (tr['date'], deposit, withdrw, descr, account, contra_account)
@@ -19,7 +19,7 @@ def main():
     parser = argparse.ArgumentParser(description=desc)
     parser.add_argument('file', type=argparse.FileType('r'), help='file to convert')
     args = parser.parse_args()
-    print("date;deposit;withdrw;descr;account;contra_account")
+    print('date;deposit;withdrw;descr;account;contra_account')
     for line in list(csv.reader(args.file.readlines(), delimiter=';'))[1:]:
         print(convert(line))
 
