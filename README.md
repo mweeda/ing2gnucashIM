@@ -20,6 +20,7 @@ Use the outputfile to import into GNU Cash, or any other accounting software tha
 ## Who
 I'm not a sofware engineer and this is my first public published script. But only because I ripped it from someone else. I'm a git n00b, but please feel free to jump in and make your own modifications.
 
+## X
 
 
 ## Credits:
