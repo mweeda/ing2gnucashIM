@@ -27,3 +27,4 @@ This script has been shamelessly plagiarized by me from the presumably unlicense
 I've modified it to work with python3, added a first line with field description and added the account en contra_account fields.
 
 ## Update
+Important notice: The script works on Dutch exports only. It only recently came to my attention that the export changes language based on the browser setting.
