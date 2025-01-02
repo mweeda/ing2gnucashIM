@@ -25,5 +25,3 @@ I'm not a sofware engineer and this is my first public published script. But onl
 This script has been shamelessly plagiarized by me from the presumably unlicensed source: https://github.com/hjmeijer/ing2gnucash
 
 I've modified it to work with python3, added a first line with field description and added the account en contra_account fields.
-
-## Update
